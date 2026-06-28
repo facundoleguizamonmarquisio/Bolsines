@@ -11,9 +11,10 @@ Antes de comenzar, asegurate de tener instalado en tu máquina:
 Para verificar que los tenés instalados, abrí una terminal y ejecutá:
 ```bash
 node --version
-psql --version
 git --version
 ```
+
+> Para verificar PostgreSQL, abrí **pgAdmin** y fijate que el servidor esté corriendo.
 
 ---
 
@@ -164,4 +165,4 @@ El seed carga los siguientes datos:
 > Verificá que `RESEND_API_KEY` esté bien configurada en el `.env`. La cuenta de Resend debe estar verificada.
 
 **Error al correr `ng serve`:**
-> Asegurate de tener Angular CLI instalado: `npm install -g @angular/cli`
+> Asegurate de tener Angular CLI instalado: `npm install -g @angular/cli`   
