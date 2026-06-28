@@ -1,0 +1,106 @@
+<div class="pantalla-container">
+
+  <!-- Encabezado -->
+  <div class="header">
+    <h2>Consultar Ubicación de Bolsines</h2>
+    <div class="cm-usuario" *ngIf="labelCMUsuario">
+      <span class="label">Comisión Médica:</span>
+      <span class="valor">{{ labelCMUsuario }}</span>
+    </div>
+  </div>
+
+  <!-- Cargando -->
+  <div class="cargando" *ngIf="cargando">
+    <p>Cargando bolsines...</p>
+  </div>
+
+  <!-- Buscador (MSG 28: habilitarBuscador) -->
+  <div class="buscador" [hidden]="bolsines.length === 0">
+    <input
+      type="text"
+      [(ngModel)]="inputBuscador"
+      (input)="filtrarBolsines()"
+      placeholder="Buscar por número de precinto o CM destino..."
+      class="input-buscador"
+    />
+  </div>
+
+  <!-- Mapa Leaflet (MSG 26: mostrarMapaBolsinParaSelec) -->
+  <div class="mapa-wrapper" [hidden]="bolsines.length === 0">
+    <div id="mapa-bolsines"></div>
+    <p class="hint">Hacé click en un marcador para seleccionar un bolsín</p>
+  </div>
+
+  <!-- Lista de bolsines filtrados -->
+  <div class="lista-bolsines" *ngIf="bolsinesFiltrados.length > 0">
+    <h3>Bolsines en tránsito</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Nro. Bolsín</th>
+          <th>Precinto</th>
+          <th>CM Destino</th>
+          <th>Última actualización</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let bolsin of bolsinesFiltrados">
+          <td>{{ bolsin.numeroBolsin }}</td>
+          <td>{{ bolsin.numeroPrecinto }}</td>
+          <td>{{ bolsin.cmDestino.nombre }}</td>
+          <td>{{ bolsin.fechaHoraActualizacion | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>
+            <!-- MSG 29: tomarSelecBolsin() -->
+            <button class="btn-seleccionar" (click)="tomarSelecBolsin(bolsin)">
+              Seleccionar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Dialog: No hay bolsines enviados (Flujo A1) -->
+  <div class="dialog-overlay" *ngIf="dialogInexistenciaBolsinesEnviados">
+    <div class="dialog">
+      <h3>Sin bolsines en tránsito</h3>
+      <p>No se encontraron bolsines en estado Enviado para su Comisión Médica.</p>
+      <button class="btn-cerrar" (click)="cerrarDialogInexistencia()">Cerrar</button>
+    </div>
+  </div>
+
+  <!-- Dialog: Confirmar envío de correo (MSG 33) -->
+  <div class="dialog-overlay" *ngIf="mostrarConfirmacionCorreo">
+    <div class="dialog">
+      <h3>Notificar ubicación</h3>
+      <p>{{ labelConsultaCorreo }}</p>
+      <div *ngIf="bolsinSeleccionado" class="datos-bolsin">
+        <p><strong>Bolsín Nro:</strong> {{ bolsinSeleccionado.numeroBolsin }}</p>
+        <p><strong>Precinto:</strong> {{ bolsinSeleccionado.numeroPrecinto }}</p>
+        <p><strong>CM Destino:</strong> {{ bolsinSeleccionado.cmDestino }}</p>
+      </div>
+      <div class="dialog-botones">
+        <!-- MSG 34: tomarConfirmacionEnvioCorreo() -->
+        <button class="btn-confirmar" (click)="tomarConfirmacionEnvioCorreo()">
+          Confirmar envío
+        </button>
+        <!-- Flujo A5: tomarCancelacionEnvioCorreo() -->
+        <button class="btn-cancelar" (click)="tomarCancelacionEnvioCorreo()">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dialog: Éxito CU31 (MSG 46: informarExitoCU31) -->
+  <div class="dialog-overlay" *ngIf="dialogExitoCU31">
+    <div class="dialog dialog-exito">
+      <h3>✅ Correo enviado exitosamente</h3>
+      <p>{{ labelConsultaCorreo }}</p>
+      <p>Se notificó al GCM destino la ubicación del bolsín.</p>
+      <button class="btn-cerrar" (click)="cerrarDialogExito()">Cerrar</button>
+    </div>
+  </div>
+
+</div>
