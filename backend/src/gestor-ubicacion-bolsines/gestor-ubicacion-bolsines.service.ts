@@ -72,15 +72,29 @@ export class GestorUbicacionBolsinesService {
     // MSG 25: self mostrarMapa()
     // MSG 26: retorna al frontend los datos para mostrarMapaBolsinParaSelec()
     // MSG 27: self habilitarBuscador()
+    // MSG 25: self mostrarMapa()
+    return this.mostrarMapa();
+    }
+  
+  // MSG 25: mostrarMapa() self
+  private mostrarMapa() {
+    // MSG 26: Gestor → Pantalla: mostrarMapaBolsinParaSelec()
     return {
       tipo: 'OK',
       cmUsuario: {
-        nombre: this.nombreCMOrigen,  // MSG 10: mostrarCMUsuario()
+        nombre: this.nombreCMOrigen,
         codigo: this.codigoCMOrigen,
       },
-      bolsines: this.mapaBolsinesEnviadosCMOrigen, // MSG 26: mostrarMapaBolsinParaSelec()
-      buscadorHabilitado: true,                    // MSG 28: habilitarBuscador()
+      bolsines: this.mapaBolsinesEnviadosCMOrigen,
+      // MSG 27-28: habilitarBuscador()
+      buscadorHabilitado: this.habilitarBuscador(),
     };
+  }
+
+  // MSG 27: habilitarBuscador() self
+  private habilitarBuscador(): boolean {
+    // MSG 28: Gestor → Pantalla: habilitarBuscador()
+    return true;
   }
 
   // Flujo A1: informarInexistenciaDeBolsinesEnviados()
@@ -211,18 +225,25 @@ export class GestorUbicacionBolsinesService {
     if (!this.bolsinSeleccionado) throw new Error('Bolsin no encontrado');  
 
     // MSG 31: self consultarEnvioCorreo()
-    // MSG 32-33: retorna al frontend para pedirConfirmacionEnvioCorreo()
-    return {
-      tipo: 'CONFIRMAR_CORREO',
-      mensaje: '¿Desea enviar un correo al GCM destino?',
-      bolsin: {
-        numeroBolsin: this.bolsinSeleccionado.getNumeroBolsin(),
-        numeroPrecinto: this.bolsinSeleccionado.numeroPrecinto,
-        cmDestino: this.bolsinSeleccionado.obtenerCMDestino().getNombre(),
-      },
-    };
-  }
+    // MSG 31: self consultarEnvioCorreo()
+    return this.consultarEnvioCorreo();
+    }
 
+  // MSG 31: consultarEnvioCorreo() self
+private consultarEnvioCorreo() {
+  // MSG 32: Gestor → Pantalla: consultarEnvioCorreo()
+  // MSG 33: Gestor → Pantalla: pedirConfirmacionEnvioCorreo()
+  return {
+    tipo: 'CONFIRMAR_CORREO',
+    mensaje: '¿Desea enviar un correo al GCM destino?',
+    bolsin: {
+      numeroBolsin: this.bolsinSeleccionado!.getNumeroBolsin(),
+      numeroPrecinto: this.bolsinSeleccionado!.numeroPrecinto,
+      cmDestino: this.bolsinSeleccionado!.obtenerCMDestino().getNombre(),
+    },
+  };
+}
+    
   // ── MSG 35: tomarConfirmacionEnvioCorreo() ───────────
   async tomarConfirmacionEnvioCorreo(
     sesionId: number,
@@ -240,8 +261,9 @@ export class GestorUbicacionBolsinesService {
 
     if (!confirma) {
       // Flujo alternativo A5
-      return { tipo: 'A5', mensaje: 'Envío de correo cancelado' };
+      return this.tomarCancelacionEnvioCorreo();
     }
+
 
     // MSG 36: self obtenerCorreoComisionDestino()
     await this.obtenerCorreoComisionDestino();
@@ -255,6 +277,11 @@ export class GestorUbicacionBolsinesService {
     // MSG 45: self informarExitoCU31()
     // MSG 46: retorna éxito al frontend
     return this.informarExitoCU31();
+  }
+
+  // Flujo A5: tomarCancelacionEnvioCorreo()
+  private tomarCancelacionEnvioCorreo() {
+    return { tipo: 'A5', mensaje: 'Envío de correo cancelado' };
   }
 
   // ── MSG 36: obtenerCorreoComisionDestino() self ──────
@@ -314,13 +341,23 @@ export class GestorUbicacionBolsinesService {
     });
   }
 
-  // ── MSG 45-46: informarExitoCU31() ───────────────────
+  // MSG 45-46: informarExitoCU31()
   private informarExitoCU31() {
-    // MSG 47: finCU()
+    // MSG 47: self finCU()
+    return this.finCU();
+  }
+
+// MSG 47: finCU() self
+  private finCU() {
     return {
       tipo: 'EXITO',
       mensaje: 'Correo enviado exitosamente al GCM destino',
       correoDestino: this.correoGCMDestino,
     };
+  }
+
+  // Flujo A4: cancelacionCU()
+  private cancelacionCU() {
+    return { tipo: 'A4', mensaje: 'Ejecucion cancelada' };
   }
 }
