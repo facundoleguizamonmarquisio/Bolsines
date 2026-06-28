@@ -62,14 +62,10 @@ export class UbicacionBolsinesComponent implements OnInit, OnDestroy {
         this.cargando = false;
 
         if (respuesta.tipo === 'A1') {
-          // Flujo alternativo A1: no hay bolsines enviados
-          // MSG 10: mostrarCMUsuario()
           this.mostrarCMUsuario(respuesta.cmUsuario.nombre, respuesta.cmUsuario.codigo);
-          // mostrarMensajeDeInexistenciaBolsines()
-          this.dialogInexistenciaBolsinesEnviados = true;
+          this.mostrarMensajeDeInexistenciaBolsines();
           return;
         }
-
         // MSG 10: mostrarCMUsuario()
         this.mostrarCMUsuario(respuesta.cmUsuario.nombre, respuesta.cmUsuario.codigo);
 
@@ -84,6 +80,12 @@ export class UbicacionBolsinesComponent implements OnInit, OnDestroy {
         console.error('Error al consultar ubicacion:', err);
       },
     });
+  }
+
+  // Flujo A1: mostrarMensajeDeInexistenciaBolsines()
+  mostrarMensajeDeInexistenciaBolsines(): void {
+    this.dialogInexistenciaBolsinesEnviados = true;
+    this.cdr.detectChanges();
   }
 
   // MSG 10: mostrarCMUsuario()

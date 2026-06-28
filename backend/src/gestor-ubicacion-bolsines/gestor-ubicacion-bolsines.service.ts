@@ -53,18 +53,14 @@ export class GestorUbicacionBolsinesService {
 
     // MSG 11: self buscarBolsinEnviadoSegunOrigen()
     await this.buscarBolsinEnviadoSegunOrigen();
-
+    
+    // Flujo alternativo A1
     if (this.bolsinesEnviadosCMOrigen.length === 0) {
       // Flujo alternativo A1
-      return {
-        tipo: 'A1',
-        mensaje: 'No se encontraron bolsines en estado Enviado',
-        cmUsuario: {
-          nombre: this.nombreCMOrigen,
-          codigo: this.codigoCMOrigen,
-        },
-      };
+      return this.informarInexistenciaDeBolsinesEnviados();
     }
+
+    
 
     // MSG 19: self obtenerUbicacionBolsin()
     await this.obtenerUbicacionBolsin();
@@ -84,6 +80,18 @@ export class GestorUbicacionBolsinesService {
       },
       bolsines: this.mapaBolsinesEnviadosCMOrigen, // MSG 26: mostrarMapaBolsinParaSelec()
       buscadorHabilitado: true,                    // MSG 28: habilitarBuscador()
+    };
+  }
+
+  // Flujo A1: informarInexistenciaDeBolsinesEnviados()
+  private informarInexistenciaDeBolsinesEnviados() {
+    return {
+      tipo: 'A1',
+      mensaje: 'No se encontraron bolsines en estado Enviado',
+      cmUsuario: {
+      nombre: this.nombreCMOrigen,
+      codigo: this.codigoCMOrigen,
+      },
     };
   }
 
@@ -124,12 +132,18 @@ export class GestorUbicacionBolsinesService {
         if (bolsin.sosEnviado()) {
           // MSG 17: self obtenerDatosBolsin()
           // MSG 18: Gestor → Bolsin: getNumeroBolsin()
+          this.obtenerDatosBolsin(bolsin);
           this.bolsinesEnviadosCMOrigen.push(bolsin);
         }
       }
     }
   }
-
+    // MSG 17: obtenerDatosBolsin() self
+  private obtenerDatosBolsin(bolsin: Bolsin): void {
+    // MSG 18: Gestor → Bolsin: getNumeroBolsin()
+    const numero = bolsin.getNumeroBolsin();
+    console.log(`Datos del bolsin obtenidos: ${numero}`);
+  }
   // ── MSG 19: obtenerUbicacionBolsin() self ────────────
   private async obtenerUbicacionBolsin(): Promise<void> {
     this.ubicacionesBolsinesEnviadosCMOrigen = [];
