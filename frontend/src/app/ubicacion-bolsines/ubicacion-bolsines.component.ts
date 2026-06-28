@@ -23,6 +23,10 @@ export class UbicacionBolsinesComponent implements OnInit, OnDestroy {
   dialogExitoCU31: boolean = false;
   dialogInexistenciaBolsinesEnviados: boolean = false;
 
+  toastMensaje: string = '';
+  toastVisible: boolean = false;
+  toastTipo: string = ''; // 'exito' o 'error'
+
   // Estado interno
   sesionId: number = 1; // En un sistema real vendría del login
   bolsines: any[] = [];
@@ -82,10 +86,22 @@ export class UbicacionBolsinesComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Flujo A1: mostrarMensajeDeInexistenciaBolsines()
+  informarExitoCU31(mensaje: string): void {
+    this.dialogExitoCU31 = true;
+    this.cdr.detectChanges();
+    setTimeout(() => {
+      this.dialogExitoCU31 = false;
+      this.cdr.detectChanges();
+    }, 4000);
+  }
+
   mostrarMensajeDeInexistenciaBolsines(): void {
     this.dialogInexistenciaBolsinesEnviados = true;
     this.cdr.detectChanges();
+    setTimeout(() => {
+      this.dialogInexistenciaBolsinesEnviados = false;
+      this.cdr.detectChanges();
+    }, 4000);
   }
 
   // MSG 10: mostrarCMUsuario()
@@ -211,10 +227,7 @@ export class UbicacionBolsinesComponent implements OnInit, OnDestroy {
 }
 
   // MSG 46: informarExitoCU31()
-  informarExitoCU31(mensaje: string): void {
-    this.dialogExitoCU31 = true;
-    this.labelConsultaCorreo = mensaje;
-  }
+  
 
   cerrarDialogExito(): void {
     this.dialogExitoCU31 = false;
@@ -223,6 +236,7 @@ export class UbicacionBolsinesComponent implements OnInit, OnDestroy {
   cerrarDialogInexistencia(): void {
     this.dialogInexistenciaBolsinesEnviados = false;
   }
+
 
   private getBolsinIdPorNumero(numeroBolsin: number): number {
     const bolsin = this.bolsines.find((b) => b.numeroBolsin === numeroBolsin);

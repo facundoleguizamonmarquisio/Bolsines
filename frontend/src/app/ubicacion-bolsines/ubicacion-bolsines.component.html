@@ -61,15 +61,6 @@
     </table>
   </div>
 
-  <!-- Dialog: No hay bolsines enviados (Flujo A1) -->
-  <div class="dialog-overlay" *ngIf="dialogInexistenciaBolsinesEnviados">
-    <div class="dialog">
-      <h3>Sin bolsines en tránsito</h3>
-      <p>No se encontraron bolsines en estado Enviado para su Comisión Médica.</p>
-      <button class="btn-cerrar" (click)="cerrarDialogInexistencia()">Cerrar</button>
-    </div>
-  </div>
-
   <!-- Dialog: Confirmar envío de correo (MSG 33) -->
   <div class="dialog-overlay" *ngIf="mostrarConfirmacionCorreo">
     <div class="dialog">
@@ -93,14 +84,12 @@
     </div>
   </div>
 
-  <!-- Dialog: Éxito CU31 (MSG 46: informarExitoCU31) -->
-  <div class="dialog-overlay" *ngIf="dialogExitoCU31">
-    <div class="dialog dialog-exito">
-      <h3>✅ Correo enviado exitosamente</h3>
-      <p>{{ labelConsultaCorreo }}</p>
-      <p>Se notificó al GCM destino la ubicación del bolsín.</p>
-      <button class="btn-cerrar" (click)="cerrarDialogExito()">Cerrar</button>
-    </div>
-  </div>
+  <!-- Toast notificación emergente -->
+  <div class="toast exito" *ngIf="dialogExitoCU31">
+  <span>Correo enviado exitosamente al GCM destino</span>
+</div>
 
+<div class="toast error" *ngIf="dialogInexistenciaBolsinesEnviados">
+  <span>No se encontraron bolsines en estado Enviado para su Comisión Médica.</span>
+</div>
 </div>
