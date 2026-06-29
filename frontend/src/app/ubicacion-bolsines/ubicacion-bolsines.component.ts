@@ -226,17 +226,6 @@ export class UbicacionBolsinesComponent implements OnInit, OnDestroy {
   this.cdr.detectChanges();
 }
 
-  // MSG 46: informarExitoCU31()
-  
-
-  cerrarDialogExito(): void {
-    this.dialogExitoCU31 = false;
-  }
-
-  cerrarDialogInexistencia(): void {
-    this.dialogInexistenciaBolsinesEnviados = false;
-  }
-
 
   private getBolsinIdPorNumero(numeroBolsin: number): number {
     const bolsin = this.bolsines.find((b) => b.numeroBolsin === numeroBolsin);
